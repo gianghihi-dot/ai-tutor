@@ -1,7 +1,6 @@
 // ============================================================
-//  src/routes/chat.js — AI Chat Tutor
-//  Ưu tiên gọi LLM thật (Google Gemini); nếu lỗi → engine luật.
-//  Có log chẩn đoán để biết chính xác đang vướng ở đâu.
+//  src/routes/chat.js — AI Chat Tutor (dùng Groq)
+//  Ưu tiên gọi LLM thật (Groq); nếu lỗi → engine luật dự phòng.
 // ============================================================
 import { Router } from 'express';
 import { db } from '../db.js';
@@ -24,8 +23,8 @@ function buildUserContext(uid) {
 }
 
 async function answerFromLLM(uid, message) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  console.log('[CHAT] Có GEMINI_API_KEY?', apiKey ? `CÓ (dài ${apiKey.length} ký tự)` : 'KHÔNG');
+  const apiKey = process.env.GROQ_API_KEY;
+  console.log('[CHAT] Có GROQ_API_KEY?', apiKey ? `CÓ (dài ${apiKey.length} ký tự)` : 'KHÔNG');
   if (!apiKey) return null;
 
   const weak = buildUserContext(uid);
@@ -37,37 +36,39 @@ async function answerFromLLM(uid, message) {
     'Bạn là gia sư Kinh tế thân thiện, giảng bằng tiếng Việt, dễ hiểu, ngắn gọn nhưng đủ ý, ' +
     'có ví dụ minh hoạ khi cần. Chỉ trả lời trong phạm vi kinh tế học. ' + contextLine;
 
- const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent';
-
   try {
-    const resp = await fetch(url, {
+    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,          // gửi key qua header (hỗ trợ cả key kiểu mới AQ.)
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: systemPrompt }] },
-        contents: [{ role: 'user', parts: [{ text: message }] }],
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: message },
+        ],
+        temperature: 0.6,
       }),
     });
 
-    console.log('[CHAT] Gemini HTTP status:', resp.status);
+    console.log('[CHAT] Groq HTTP status:', resp.status);
     const data = await resp.json();
 
     if (!resp.ok) {
-      console.error('[CHAT] Gemini báo lỗi:', JSON.stringify(data).slice(0, 500));
+      console.error('[CHAT] Groq báo lỗi:', JSON.stringify(data).slice(0, 500));
       return null;
     }
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    const text = data?.choices?.[0]?.message?.content;
     if (!text) {
-      console.error('[CHAT] Gemini không trả về text:', JSON.stringify(data).slice(0, 500));
+      console.error('[CHAT] Groq không trả về text:', JSON.stringify(data).slice(0, 500));
       return null;
     }
-    console.log('[CHAT] Gemini trả lời OK.');
+    console.log('[CHAT] Groq trả lời OK.');
     return { reply: text.trim(), refs: [] };
   } catch (e) {
-    console.error('[CHAT] Lỗi gọi Gemini:', e.message);
+    console.error('[CHAT] Lỗi gọi Groq:', e.message);
     return null;
   }
 }
