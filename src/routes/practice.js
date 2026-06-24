@@ -15,15 +15,10 @@ router.use(requireAuth);
 router.post('/generate', (req, res) => {
   const { subjectId, chapterId, goal, count, types, mode } = req.body || {};
   if (!subjectId) return res.status(400).json({ error: 'Thiếu môn học.' });
-
-  // Cập nhật mục tiêu điểm của user (nếu chọn)
   if (goal) db.prepare('UPDATE Users SET goal=? WHERE id=?').run(goal, req.user.id);
-
   const userGoal = goal || db.prepare('SELECT goal FROM Users WHERE id=?').get(req.user.id).goal;
-
   let questions;
   if (mode === 'survey') {
-    // Khảo sát: lấy đa dạng độ khó & loại, không thiên về chủ đề yếu (vì chưa có dữ liệu)
     const pool = db.prepare('SELECT * FROM Questions WHERE subject_id=? ORDER BY RANDOM()').all(subjectId);
     questions = pool.slice(0, count || 8).map(q => {
       const p = JSON.parse(q.payload);
@@ -37,24 +32,20 @@ router.post('/generate', (req, res) => {
       subjectId, chapterId, goal: userGoal, count: count || 8, types,
     });
   }
-
   res.json({ questions, goal: userGoal });
 });
 
 // Nộp bài → chấm điểm & phân tích
-router.post('/submit', (req, res) => {
+router.post('/submit', async (req, res) => {
   const { subjectId, mode = 'practice', answers } = req.body || {};
   if (!subjectId || !Array.isArray(answers))
     return res.status(400).json({ error: 'Dữ liệu nộp bài không hợp lệ.' });
+  const result = await gradeSubmission(req.user.id, subjectId, mode, answers);
 
-  const result = gradeSubmission(req.user.id, subjectId, mode, answers);
-
-  // Khuyến nghị thích ứng theo từng chủ đề vừa làm
   const mastery = masteryByTopic(req.user.id, subjectId);
   const topicsSeen = [...new Set(result.detail.map(d => d.topic))];
   const recs = topicsSeen.map(t => recommendation(mastery[t])).filter(Boolean);
 
-  // Điểm mạnh / điểm yếu nhanh từ lượt làm này
   const byTopic = {};
   result.detail.forEach(d => {
     byTopic[d.topic] = byTopic[d.topic] || { topic: d.topic, correct: 0, total: 0 };
