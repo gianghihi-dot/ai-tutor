@@ -4,10 +4,9 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-
 import { initSchema } from './src/db.js';
 import { seed } from './src/seed.js';
-
+import { seedExtra } from './src/seed-extra.js';
 import authRoutes from './src/routes/auth.js';
 import contentRoutes from './src/routes/content.js';
 import practiceRoutes from './src/routes/practice.js';
@@ -24,6 +23,8 @@ const PORT = process.env.PORT || 3000;
 initSchema();
 const seeded = seed();
 console.log(seeded ? '✓ Đã nạp dữ liệu mẫu.' : '• Dữ liệu đã sẵn sàng.');
+const extra = seedExtra();
+console.log(extra ? '✓ Đã bổ sung câu hỏi.' : '• Câu hỏi bổ sung đã có sẵn.');
 
 app.use(express.json({ limit: '1mb' }));
 
