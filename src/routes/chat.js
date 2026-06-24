@@ -37,7 +37,7 @@ async function answerFromLLM(uid, message) {
     'Bạn là gia sư Kinh tế thân thiện, giảng bằng tiếng Việt, dễ hiểu, ngắn gọn nhưng đủ ý, ' +
     'có ví dụ minh hoạ khi cần. Chỉ trả lời trong phạm vi kinh tế học. ' + contextLine;
 
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+ const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
   try {
     const resp = await fetch(url, {
