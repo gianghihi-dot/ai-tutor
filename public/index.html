@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Tutor · Học Kinh tế thông minh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <!-- ============ MÀN HÌNH XÁC THỰC ============ -->
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-art" aria-hidden="true">
+      <div class="aurora"></div>
+      <div class="auth-brand">
+        <div class="logo-mark">∑</div>
+        <div>
+          <h1>AI Tutor</h1>
+          <p>Gia sư Kinh tế cá nhân hoá bằng trí tuệ nhân tạo</p>
+        </div>
+      </div>
+      <ul class="auth-points">
+        <li><span>↗</span> Khảo sát năng lực &amp; sinh câu hỏi theo trình độ</li>
+        <li><span>⊕</span> Chấm điểm, phân tích bài làm chi tiết</li>
+        <li><span>◷</span> Thi giả lập có đếm giờ như phòng thi thật</li>
+        <li><span>◈</span> Phát hiện lỗ hổng &amp; lộ trình học riêng cho bạn</li>
+        <li><span>✦</span> Chat Tutor giải đáp mọi lúc</li>
+      </ul>
+    </div>
+
+    <div class="auth-panel">
+      <div class="auth-card">
+        <!-- Đăng nhập -->
+        <form id="form-login" class="auth-form">
+          <h2>Đăng nhập</h2>
+          <p class="muted">Chào mừng quay lại! Tiếp tục hành trình học tập của bạn.</p>
+          <label>Email<input type="email" name="email" required placeholder="ban@example.com" /></label>
+          <label>Mật khẩu<input type="password" name="password" required placeholder="••••••••" /></label>
+          <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+          <div class="auth-links">
+            <a href="#" data-go="forgot">Quên mật khẩu?</a>
+            <a href="#" data-go="register">Tạo tài khoản mới</a>
+          </div>
+        </form>
+
+        <!-- Đăng ký -->
+        <form id="form-register" class="auth-form hidden">
+          <h2>Tạo tài khoản</h2>
+          <p class="muted">Bắt đầu miễn phí trong 30 giây.</p>
+          <label>Họ và tên<input type="text" name="fullName" required placeholder="Nguyễn Văn A" /></label>
+          <label>Email<input type="email" name="email" required placeholder="ban@example.com" /></label>
+          <label>Mật khẩu<input type="password" name="password" required placeholder="Ít nhất 6 ký tự" /></label>
+          <button type="submit" class="btn btn-primary btn-block">Đăng ký</button>
+          <div class="auth-links"><a href="#" data-go="login">Đã có tài khoản? Đăng nhập</a></div>
+        </form>
+
+        <!-- Quên mật khẩu -->
+        <form id="form-forgot" class="auth-form hidden">
+          <h2>Quên mật khẩu</h2>
+          <p class="muted">Nhập email để nhận mã đặt lại mật khẩu.</p>
+          <label>Email<input type="email" name="email" required placeholder="ban@example.com" /></label>
+          <button type="submit" class="btn btn-primary btn-block">Gửi mã đặt lại</button>
+          <div id="reset-token-box" class="hint-box hidden"></div>
+          <div class="auth-links"><a href="#" data-go="reset">Đã có mã? Đặt lại ngay</a> · <a href="#" data-go="login">Quay lại đăng nhập</a></div>
+        </form>
+
+        <!-- Đặt lại mật khẩu -->
+        <form id="form-reset" class="auth-form hidden">
+          <h2>Đặt lại mật khẩu</h2>
+          <label>Mã đặt lại<input type="text" name="token" required placeholder="Dán mã ở đây" /></label>
+          <label>Mật khẩu mới<input type="password" name="newPassword" required placeholder="Ít nhất 6 ký tự" /></label>
+          <button type="submit" class="btn btn-primary btn-block">Cập nhật mật khẩu</button>
+          <div class="auth-links"><a href="#" data-go="login">Quay lại đăng nhập</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ KHUNG ỨNG DỤNG ============ -->
+  <div id="app-shell" class="app-shell hidden">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-mark sm">∑</div>
+        <span>AI Tutor</span>
+      </div>
+      <nav class="nav">
+        <a class="nav-item" data-view="dashboard"><span class="ic">▦</span> Tổng quan</a>
+        <a class="nav-item" data-view="practice"><span class="ic">✎</span> Luyện tập &amp; Khảo sát</a>
+        <a class="nav-item" data-view="exam"><span class="ic">◷</span> Thi giả lập</a>
+        <a class="nav-item" data-view="analytics"><span class="ic">◈</span> Phân tích lỗ hổng</a>
+        <a class="nav-item" data-view="chat"><span class="ic">✦</span> AI Chat Tutor</a>
+      </nav>
+      <div class="sidebar-foot">
+        <a class="nav-item" data-view="profile"><span class="ic">☺</span> Hồ sơ</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn" id="menu-toggle" aria-label="Menu">☰</button>
+        <div class="topbar-title" id="view-title">Tổng quan</div>
+        <div class="topbar-actions">
+          <button class="icon-btn" id="theme-toggle" aria-label="Đổi giao diện">◐</button>
+          <div class="user-chip" id="user-chip">
+            <div class="avatar" id="user-avatar">A</div>
+            <span id="user-name">Bạn</span>
+          </div>
+          <button class="btn btn-ghost" id="logout-btn">Đăng xuất</button>
+        </div>
+      </header>
+      <main class="content" id="app-content"><!-- view render here --></main>
+    </div>
+  </div>
+
+  <!-- Toast & overlay -->
+  <div id="toast-wrap" class="toast-wrap"></div>
+  <div id="overlay" class="overlay hidden"></div>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

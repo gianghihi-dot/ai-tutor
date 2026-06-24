@@ -1,0 +1,23 @@
+{
+  "name": "ai-tutor",
+  "version": "1.0.0",
+  "description": "AI Tutor - Hệ thống hỗ trợ học tập thông minh cho sinh viên ngành Kinh tế",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node src/seed.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["education", "ai-tutor", "economics", "adaptive-learning"],
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^12.11.1",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
