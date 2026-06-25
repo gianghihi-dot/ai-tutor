@@ -6,10 +6,10 @@ import { state, renderQuestion, wireQuestionInteractions, collectAnswers } from 
 import { esc, loadingHTML, toast } from '../ui.js';
 import { renderResult } from './result.js';
 
-// Trạng thái phiên thi hiện tại (cấp module)
 let session = { examId: null, questions: [], timerId: null, remaining: 0, submitted: false };
 
 export async function renderExam(root) {
+  cleanupExam(); // tắt đồng hồ cũ (nếu có) khi mở lại view
   root.innerHTML = loadingHTML('Đang tải môn học…');
   if (!state.subjects.length) {
     const d = await api.get('/content/subjects');
@@ -20,6 +20,7 @@ export async function renderExam(root) {
 
 // ---------- Bước 1: Cấu hình đề thi ----------
 function showConfig(root) {
+  cleanupExam(); // đảm bảo không còn đồng hồ chạy ngầm
   const preSel = state.currentSubject?.id;
   root.innerHTML = `
     <div class="card">
@@ -93,6 +94,7 @@ function showConfig(root) {
     root.innerHTML = loadingHTML('Đang biên soạn đề thi…');
     try {
       const d = await api.post('/exams/create', { subjectId, chapterId, difficulty, count, duration });
+      cleanupExam(); // tắt đồng hồ cũ trước khi bắt đầu phiên mới
       session = {
         examId: d.examId,
         questions: d.questions,
@@ -140,8 +142,11 @@ function showExam(root) {
     timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     if (session.remaining <= 60) timerEl.classList.add('danger');
     if (session.remaining <= 0) {
-      toast('Hết giờ! Hệ thống tự động nộp bài.', '');
-      doSubmit(root, true);
+      cleanupExam();               // TẮT đồng hồ ngay, tránh bắn thông báo lặp
+      if (!session.submitted) {
+        toast('Hết giờ! Hệ thống tự động nộp bài.', '');
+        doSubmit(root, true);
+      }
       return;
     }
     session.remaining -= 1;
@@ -165,7 +170,7 @@ function showExam(root) {
 async function doSubmit(root, auto) {
   if (session.submitted) return;
   session.submitted = true;
-  clearInterval(session.timerId);
+  cleanupExam(); // tắt đồng hồ ngay khi nộp
 
   const qRoot = root.querySelector('#e-questions');
   const answers = qRoot
