@@ -13,10 +13,10 @@ export async function renderDashboard(root, nav) {
   const hasData = s.attempts > 0;
 
   root.innerHTML = `
-    <div class="hero">
-      <h2>Xin chào ${esc(state.user.full_name.split(' ').pop())}, sẵn sàng học chưa?</h2>
-      <p>AI Tutor cá nhân hoá lộ trình học Kinh tế cho bạn — khảo sát năng lực, luyện tập thích ứng và thi giả lập như phòng thi thật.</p>
-      <button class="btn btn-primary" data-act="start">Bắt đầu học ↗</button>
+   <div class="hero">
+      <h2>🔥 ${esc(state.user.full_name.split(' ').pop())} ơi, deadline điểm số đang tới gần đấy!</h2>
+      <p>Đừng để nước tới chân mới nhảy 🐸 — AI Tutor giúp bạn học thông minh, không cày trâu: chấm bài tận tình, chỉ ra chỗ yếu, ra đề vô tận. Vào học liền tay nào! 💪</p>
+      <button class="btn btn-primary" data-act="start">Bắt đầu học ngay ↗</button>
     </div>
 
     <div class="grid grid-4">
