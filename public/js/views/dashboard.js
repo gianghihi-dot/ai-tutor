@@ -20,10 +20,10 @@ export async function renderDashboard(root, nav) {
     </div>
 
     <div class="grid grid-4">
-      ${statCard('Điểm trung bình', s.avgScore ? `${s.avgScore}<small>/10</small>` : '—', '◈')}
-      ${statCard('Tỷ lệ đúng', `${s.accuracy}<small>%</small>`, '✓')}
-      ${statCard('Bài đã làm', s.attempts, '✎')}
-      ${statCard('Số câu đã luyện', s.questions, '∑')}
+      ${statCard('Điểm trung bình', s.avgScore ? `${s.avgScore}<small>/10</small>` : '—', '◈', 'c1')}
+      ${statCard('Tỷ lệ đúng', `${s.accuracy}<small>%</small>`, '✓', 'c2')}
+      ${statCard('Bài đã làm', s.attempts, '✎', 'c3')}
+      ${statCard('Số câu đã luyện', s.questions, '∑', 'c4')}
     </div>
 
     <div class="grid grid-2" style="margin-top:1.1rem">
@@ -43,7 +43,7 @@ export async function renderDashboard(root, nav) {
 
     <div class="section-head"><h3>Môn học</h3><span class="muted">${state.subjects.length} môn ngành Kinh tế</span></div>
     <div class="grid grid-3" id="subj-grid">
-      ${state.subjects.map(subjCard).join('')}
+      ${state.subjects.map((s, i) => subjCard(s, i)).join('')}
     </div>
 
     <div class="section-head"><h3>Thành tích gần đây</h3></div>
@@ -70,16 +70,18 @@ export async function renderDashboard(root, nav) {
   });
 }
 
-function statCard(label, value, ico) {
-  return `<div class="card stat">
+function statCard(label, value, ico, colorClass) {
+  return `<div class="card stat stat-${colorClass}">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <span class="label">${label}</span><span class="ico">${ico}</span>
     </div>
     <span class="value">${value}</span>
   </div>`;
 }
-function subjCard(s) {
-  return `<div class="card subject-card" data-sid="${s.id}">
+function subjCard(s, i) {
+  // Xoay vòng 4 màu theo thứ tự môn
+  const tint = `tint-${(i % 4) + 1}`;
+  return `<div class="card subject-card ${tint}" data-sid="${s.id}">
     <div class="s-ico">${s.icon || '◆'}</div>
     <b>${esc(s.name)}</b>
     <span class="muted" style="font-size:.84rem">${esc(s.description || '')}</span>
