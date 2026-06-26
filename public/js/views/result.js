@@ -2,7 +2,15 @@
 //  js/views/result.js — Hiển thị kết quả & phân tích sau khi nộp
 // ============================================================
 import { esc, TYPE_LABEL } from '../ui.js';
-
+// Câu khen/động viên hài hước theo điểm số
+function cheerLine(score) {
+  if (score >= 9)  return '🏆 Đỉnh của chóp! Điểm này đem khoe được rồi đó nha!';
+  if (score >= 8)  return '🔥 Xuất sắc! Bạn học bài hay là bạn là thiên tài vậy trời?';
+  if (score >= 6.5) return '😎 Khá lắm! Thêm chút nữa là chạm tay vào điểm A rồi!';
+  if (score >= 5)  return '💪 Qua môn rồi nha! Nhưng đừng dừng lại, cố thêm tí nữa nào!';
+  if (score >= 3)  return '🐸 Hơi đuối rồi đó… nhưng không sao, làm thêm vài bài là lên liền!';
+  return '😅 Thôi nào, ai cũng có khởi đầu mà! Luyện thêm chút là khác ngay, tin mình đi!';
+}
 export function renderResult(r) {
   const pct = Math.round(r.score * 10);
   const recHtml = (r.recommendations && r.recommendations.length)
@@ -24,6 +32,7 @@ export function renderResult(r) {
         <div style="flex:1;min-width:220px">
           <h3>Kết quả: ${r.grade}</h3>
           <p class="muted">Đúng ${r.correct}/${r.total} câu · Tỷ lệ ${pct}%</p>
+          <p style="margin-top:.5rem;font-weight:600;color:var(--accent)">${cheerLine(r.score)}</p>
           <div style="margin-top:.7rem">${tags.join('')}</div>
         </div>
       </div>
