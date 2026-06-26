@@ -85,7 +85,9 @@ function showConfig(root) {
     const subjectId = Number(subjectSel.value);
     const chapterId = chapterSel.value ? Number(chapterSel.value) : null;
     const difficulty = Number(root.querySelector('#e-diff').value);
-    const count = Number(root.querySelector('#e-count').value);
+    let count = Number(root.querySelector('#e-count').value);
+    if (!Number.isFinite(count) || count < 1) count = 1;
+    if (count > 20) count = 20;
     const duration = Number(root.querySelector('#e-duration').value);
 
     root.innerHTML = loadingHTML('Đang biên soạn đề thi…');
