@@ -50,13 +50,10 @@ function showConfig(root) {
             <option value="5">Rất khó (mọi mức độ)</option>
           </select>
         </div>
-        <div class="field">
-          <label>Số câu hỏi</label>
-          <select id="e-count">
-            <option>5</option><option selected>10</option><option>15</option><option>20</option>
-          </select>
+       <div class="field">
+          <label>Số câu hỏi (1–20)</label>
+          <input type="number" id="e-count" min="1" max="20" value="10" />
         </div>
-      </div>
 
       <div class="field">
         <label>Thời gian làm bài</label>
