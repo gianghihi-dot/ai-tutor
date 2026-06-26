@@ -4,25 +4,30 @@
 // ============================================================
 import { db } from '../db.js';
 
-// Sinh tối đa `count` câu trắc nghiệm mới cho 1 môn (tùy chọn chương, độ khó).
-// Trả về mảng id các câu đã lưu vào DB (có thể ít hơn count, hoặc rỗng nếu lỗi).
 export async function generateAIQuestions({ subjectId, chapterId = null, difficulty = 3, count = 5 }) {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey || count <= 0) return [];
 
-  // Lấy thông tin môn + chương để AI bám sát chương trình
   const subject = db.prepare('SELECT name FROM Subjects WHERE id=?').get(subjectId);
   if (!subject) return [];
 
+  // Xác định chương để gán câu hỏi.
+  // Nếu không chọn chương cụ thể → gán vào chương đầu tiên của môn (vì DB yêu cầu chapter_id).
+  let targetChapterId = chapterId;
   let chapterName = 'tổng hợp các chương';
   let topicHint = '';
   if (chapterId) {
     const ch = db.prepare('SELECT name, summary FROM Chapters WHERE id=?').get(chapterId);
     if (ch) { chapterName = ch.name; topicHint = ch.summary || ''; }
   } else {
-    const chs = db.prepare('SELECT name FROM Chapters WHERE subject_id=?').all(subjectId);
-    topicHint = chs.map(c => c.name).join(', ');
+    const chs = db.prepare('SELECT id, name FROM Chapters WHERE subject_id=? ORDER BY ord').all(subjectId);
+    if (chs.length) {
+      targetChapterId = chs[0].id; // gán tạm vào chương đầu
+      topicHint = chs.map(c => c.name).join(', ');
+    }
   }
+  // Nếu môn không có chương nào thì không thể lưu → thoát an toàn
+  if (!targetChapterId) return [];
 
   const prompt =
     `Bạn là giảng viên ra đề môn "${subject.name}" (ngành Kinh tế). ` +
@@ -59,7 +64,6 @@ export async function generateAIQuestions({ subjectId, chapterId = null, difficu
   const list = Array.isArray(parsed?.questions) ? parsed.questions : [];
   if (!list.length) return [];
 
-  // Lưu câu hợp lệ vào DB
   const insQ = db.prepare(
     `INSERT INTO Questions (subject_id, chapter_id, type, difficulty, stem, payload, explanation, topic)
      VALUES (@subject_id, @chapter_id, 'mcq', @difficulty, @stem, @payload, @explanation, @topic)`
@@ -67,7 +71,6 @@ export async function generateAIQuestions({ subjectId, chapterId = null, difficu
 
   const ids = [];
   for (const q of list) {
-    // KIỂM TRA ĐỊNH DẠNG kỹ — câu nào sai thì bỏ
     if (!q || typeof q.stem !== 'string' || !q.stem.trim()) continue;
     if (!Array.isArray(q.options) || q.options.length !== 4) continue;
     if (q.options.some(o => typeof o !== 'string' || !o.trim())) continue;
@@ -77,7 +80,7 @@ export async function generateAIQuestions({ subjectId, chapterId = null, difficu
     try {
       const info = insQ.run({
         subject_id: subjectId,
-        chapter_id: chapterId,
+        chapter_id: targetChapterId,
         difficulty: Math.max(1, Math.min(5, Number(difficulty) || 3)),
         stem: q.stem.trim(),
         payload: JSON.stringify({ options: q.options.map(o => o.trim()), answer: ans }),
