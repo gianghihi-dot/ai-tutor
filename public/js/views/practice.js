@@ -38,6 +38,12 @@ function showSetup(root) {
       </div>
 
       <div class="field">
+        <label>Hoặc nhập môn khác (AI tự sinh câu hỏi)</label>
+        <input type="text" id="p-custom" placeholder="VD: Quản trị học, Kế toán tài chính…" />
+        <span class="muted" style="font-size:.78rem">Để trống nếu dùng môn đã chọn ở trên. Nếu nhập, AI sẽ sinh câu hỏi cho môn này.</span>
+      </div>
+
+      <div class="field">
         <label>Mục tiêu điểm</label>
         <div class="goal-pills" id="p-goals">
           ${[['C','Đạt (C)'],['B+','Khá (B+)'],['A','Giỏi (A)'],['improve','Thi cải thiện']]
@@ -53,7 +59,7 @@ function showSetup(root) {
             <option value="survey">Khảo sát năng lực đầu vào</option>
           </select>
         </div>
-       <div class="field">
+        <div class="field">
           <label>Số câu hỏi (1–20)</label>
           <input type="number" id="p-count" min="1" max="20" value="8" />
         </div>
@@ -89,11 +95,18 @@ function showSetup(root) {
     if (count > 20) count = 20;
     const subjectId = Number(subjectSel.value);
     const chapterId = chapterSel.value ? Number(chapterSel.value) : null;
-    root.innerHTML = loadingHTML('AI đang sinh câu hỏi phù hợp với bạn…');
+    const customSubject = root.querySelector('#p-custom').value.trim();
+
+    root.innerHTML = loadingHTML(customSubject
+      ? `AI đang soạn câu hỏi cho môn "${esc(customSubject)}"…`
+      : 'AI đang sinh câu hỏi phù hợp với bạn…');
     try {
-      const d = await api.post('/practice/generate', { subjectId, chapterId, goal, count, mode });
+      const payload = customSubject
+        ? { customSubject, count, mode: 'practice' }
+        : { subjectId, chapterId, goal, count, mode };
+      const d = await api.post('/practice/generate', payload);
       if (!d.questions.length) { toast('Không có câu hỏi phù hợp.', 'bad'); return showSetup(root); }
-      current = { questions: d.questions, subjectId, mode };
+      current = { questions: d.questions, subjectId: d.subjectId || subjectId, mode: customSubject ? 'practice' : mode };
       showQuestions(root);
     } catch (e) { toast(e.message, 'bad'); showSetup(root); }
   };
