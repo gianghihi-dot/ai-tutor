@@ -123,33 +123,3 @@
   <script type="module" src="/js/main.js"></script>
 </body>
 </html>
-/* ============================================================
-   PHỐI MÀU — Icon menu sidebar (mỗi mục một màu)
-   ============================================================ */
-.nav-item[data-view="dashboard"] .ic { color: var(--tone-orange); }
-.nav-item[data-view="practice"]  .ic { color: var(--tone-green); }
-.nav-item[data-view="exam"]      .ic { color: var(--tone-blue); }
-.nav-item[data-view="analytics"] .ic { color: var(--tone-purple); }
-.nav-item[data-view="chat"]      .ic { color: #ff5c8a; }   /* hồng */
-.nav-item[data-view="profile"]   .ic { color: #25d6c4; }   /* xanh ngọc */
-
-/* Khi mục đang được chọn, nền nhẹ theo màu của mục đó */
-.nav-item[data-view="dashboard"].active { background: color-mix(in srgb, var(--tone-orange) 14%, transparent); }
-.nav-item[data-view="practice"].active  { background: color-mix(in srgb, var(--tone-green) 14%, transparent); }
-.nav-item[data-view="exam"].active       { background: color-mix(in srgb, var(--tone-blue) 14%, transparent); }
-.nav-item[data-view="analytics"].active  { background: color-mix(in srgb, var(--tone-purple) 14%, transparent); }
-.nav-item[data-view="chat"].active       { background: color-mix(in srgb, #ff5c8a 14%, transparent); }
-.nav-item[data-view="profile"].active    { background: color-mix(in srgb, #25d6c4 14%, transparent); }
-/* ============================================================
-   PHỐI MÀU — Icon menu sidebar (ưu tiên cao, ghi đè màu gốc)
-   ============================================================ */
-.nav-item[data-view="dashboard"] .ic { color: var(--tone-orange) !important; }
-.nav-item[data-view="practice"]  .ic { color: var(--tone-green)  !important; }
-.nav-item[data-view="exam"]      .ic { color: var(--tone-blue)   !important; }
-.nav-item[data-view="analytics"] .ic { color: var(--tone-purple) !important; }
-.nav-item[data-view="chat"]      .ic { color: #ff5c8a !important; }
-.nav-item[data-view="profile"]   .ic { color: #25d6c4 !important; }
-
-.nav-item .ic { opacity: 1 !important; }
-/* Giữ icon sáng màu cả khi đang chọn (không bị mờ theo màu chữ active) */
-.nav-item.active .ic { opacity: 1; }
