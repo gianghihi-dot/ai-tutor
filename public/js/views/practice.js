@@ -53,11 +53,9 @@ function showSetup(root) {
             <option value="survey">Khảo sát năng lực đầu vào</option>
           </select>
         </div>
-        <div class="field">
-          <label>Số câu hỏi</label>
-          <select id="p-count">
-            <option>5</option><option selected>8</option><option>10</option><option>15</option>
-          </select>
+       <div class="field">
+          <label>Số câu hỏi (1–20)</label>
+          <input type="number" id="p-count" min="1" max="20" value="8" />
         </div>
       </div>
 
@@ -86,7 +84,9 @@ function showSetup(root) {
 
   root.querySelector('#p-gen').onclick = async () => {
     const mode = root.querySelector('#p-mode').value;
-    const count = Number(root.querySelector('#p-count').value);
+    let count = Number(root.querySelector('#p-count').value);
+    if (!Number.isFinite(count) || count < 1) count = 1;
+    if (count > 20) count = 20;
     const subjectId = Number(subjectSel.value);
     const chapterId = chapterSel.value ? Number(chapterSel.value) : null;
     root.innerHTML = loadingHTML('AI đang sinh câu hỏi phù hợp với bạn…');
