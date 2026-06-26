@@ -444,3 +444,13 @@ textarea.q-input { min-height: 120px; resize: vertical; }
 .subject-card.tint-2:hover { border-color: var(--tone-green); }
 .subject-card.tint-3:hover { border-color: var(--tone-blue); }
 .subject-card.tint-4:hover { border-color: var(--tone-purple); }
+/* ============================================================
+   PHỐI MÀU — Icon menu sidebar
+   ============================================================ */
+.nav-item[data-view="dashboard"] .ic { color: var(--tone-orange) !important; }
+.nav-item[data-view="practice"]  .ic { color: var(--tone-green)  !important; }
+.nav-item[data-view="exam"]      .ic { color: var(--tone-blue)   !important; }
+.nav-item[data-view="analytics"] .ic { color: var(--tone-purple) !important; }
+.nav-item[data-view="chat"]      .ic { color: #ff5c8a !important; }
+.nav-item[data-view="profile"]   .ic { color: #25d6c4 !important; }
+.nav-item .ic { opacity: 1 !important; }
