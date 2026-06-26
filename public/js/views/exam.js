@@ -156,7 +156,7 @@ function showExam(root) {
     if (session.remaining <= 0) {
       cleanupExam();
       if (!session.submitted) {
-        toast('Hết giờ! Hệ thống tự động nộp bài.', '');
+        toast('⏰ Hết giờ rồi! Bút xuống nào, để mình nộp giúp bạn nhé ✋', '');
         doSubmit(root, true);
       }
       return;
@@ -196,7 +196,7 @@ async function doSubmit(root, auto) {
       `<button class="btn btn-block" id="e-again" style="margin-top:1rem">Tạo đề thi mới</button>`;
     root.querySelector('#e-again').onclick = () => showConfig(root);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    toast(`${auto ? 'Tự động nộp · ' : ''}Điểm thi: ${r.score}/10`, r.score >= 5 ? 'good' : '');
+    toast(`${auto ? '⏰ Tự động nộp · ' : '📨 Đã nộp · '}Điểm thi: ${r.score}/10`, r.score >= 5 ? 'good' : '');
   } catch (e) {
     toast(e.message, 'bad');
     showConfig(root);
