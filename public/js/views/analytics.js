@@ -42,9 +42,30 @@ async function loadSubject(body, subjectId) {
       api.get(`/analytics/plan/${subjectId}`),
     ]);
     render(body, gaps, plan);
+    loadAIPlan(body, subjectId); // gọi AI riêng, bồi vào sau (không chặn trang)
   } catch (e) {
     toast(e.message, 'bad');
     body.innerHTML = `<div class="card empty"><p class="muted">Không tải được dữ liệu phân tích.</p></div>`;
+  }
+}
+
+// Gọi lộ trình AI và chèn vào khu vực dành sẵn
+async function loadAIPlan(body, subjectId) {
+  const slot = body.querySelector('#ai-plan-slot');
+  if (!slot) return;
+  slot.innerHTML = `<div class="card" style="margin-top:1.1rem">
+    <div class="section-head" style="margin:0 0 .4rem"><h3>✨ Gợi ý từ AI cho riêng bạn</h3></div>
+    <p class="muted" style="padding:.4rem 0">Đang nhờ AI soạn lộ trình cá nhân hoá… 🤖</p>
+  </div>`;
+  try {
+    const { aiPlan } = await api.get(`/analytics/ai-plan/${subjectId}`);
+    if (aiPlan && aiPlan.tips?.length) {
+      slot.innerHTML = aiPlanCard(aiPlan);
+    } else {
+      slot.innerHTML = ''; // không có AI → ẩn hẳn
+    }
+  } catch (e) {
+    slot.innerHTML = ''; // lỗi → ẩn, vẫn còn lộ trình chuẩn ở trên
   }
 }
 
@@ -59,8 +80,8 @@ function render(body, gaps, plan) {
         <h3>Chưa có dữ liệu cho môn này</h3>
         <p class="muted">Hãy làm một bài khảo sát hoặc luyện tập để AI Tutor phân tích lỗ hổng kiến thức và xây lộ trình học cho bạn.</p>
       </div>`;
-    // Vẫn hiển thị lộ trình (các bước đều chưa hoàn thành)
     body.insertAdjacentHTML('beforeend', planCard(plan));
+    body.insertAdjacentHTML('beforeend', `<div id="ai-plan-slot"></div>`);
     return;
   }
 
@@ -92,6 +113,7 @@ function render(body, gaps, plan) {
 
     ${adaptiveCard(gaps)}
     ${planCard(plan)}
+    <div id="ai-plan-slot"></div>
   `;
 }
 
@@ -106,7 +128,6 @@ function topicRow(w, cls) {
   </div>`;
 }
 
-// Thẻ mô tả hành vi thích ứng (giảm/tăng độ khó)
 function adaptiveCard(gaps) {
   const reduce = gaps.weak.filter(w => w.streak_wrong >= 2);
   const advance = gaps.strong;
@@ -120,7 +141,6 @@ function adaptiveCard(gaps) {
   </div>`;
 }
 
-// Thẻ lộ trình học thích ứng 7 bước
 function planCard(plan) {
   return `<div class="card" style="margin-top:1.1rem">
     <div class="section-head" style="margin:0 0 .4rem">
@@ -136,6 +156,21 @@ function planCard(plan) {
             <h4>${esc(s.title)}</h4>
             <p>${esc(s.desc)}</p>
           </div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// Thẻ lộ trình gợi ý từ AI
+function aiPlanCard(ai) {
+  return `<div class="card" style="margin-top:1.1rem;border:1px solid var(--accent)">
+    <div class="section-head" style="margin:0 0 .4rem"><h3>✨ Gợi ý từ AI cho riêng bạn</h3></div>
+    ${ai.summary ? `<p style="margin:.2rem 0 .8rem;font-weight:600;color:var(--accent)">${esc(ai.summary)}</p>` : ''}
+    <div class="steps">
+      ${ai.tips.map((t, i) => `
+        <div class="step">
+          <div class="dot">${i + 1}</div>
+          <div><p style="margin:0">${esc(t)}</p></div>
         </div>`).join('')}
     </div>
   </div>`;
