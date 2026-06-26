@@ -165,3 +165,57 @@ export async function buildAIStudyPlan(userId, subjectId) {
     return null;
   }
 }
+// ============================================================
+//  Lộ trình học cá nhân hoá bằng AI (Groq)
+//  Dựa trên môn + chủ đề yếu + tiến độ → trả về vài lời khuyên cụ thể.
+//  Lỗi/không có key → trả null (UI sẽ chỉ hiện lộ trình chuẩn).
+// ============================================================
+export async function buildAIStudyPlan(userId, subjectId) {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return null;
+
+  const subject = db.prepare('SELECT name FROM Subjects WHERE id=?').get(subjectId);
+  if (!subject) return null;
+
+  const a = analyzeUser(userId, subjectId);
+  const avg = db.prepare(
+    `SELECT AVG(score) s FROM ExamResults WHERE user_id=? AND subject_id=?`
+  ).get(userId, subjectId).s;
+
+  const weakList = a.weak.slice(0, 5).map(w => `${w.topic} (${Math.round(w.mastery * 100)}%)`).join(', ');
+  const strongList = a.strong.slice(0, 3).map(s => s.topic).join(', ');
+
+  const prompt =
+    `Bạn là cố vấn học tập thân thiện cho sinh viên. Môn học: "${subject.name}". ` +
+    `Điểm trung bình hiện tại: ${avg ? avg.toFixed(1) : 'chưa có'}/10. ` +
+    `Chủ đề còn yếu: ${weakList || 'chưa rõ'}. ` +
+    `Chủ đề đã vững: ${strongList || 'chưa rõ'}. ` +
+    `Hãy gợi ý một lộ trình học ngắn gọn, cá nhân hoá, giọng động viên gần gũi (xưng "bạn"). ` +
+    `Trả về DUY NHẤT một JSON (không kèm chữ thừa, không kèm \`\`\`) dạng:\n` +
+    `{"summary":"một câu nhận xét động viên ngắn","tips":["lời khuyên cụ thể 1","lời khuyên 2","lời khuyên 3","lời khuyên 4"]}`;
+
+  try {
+    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.6,
+        response_format: { type: 'json_object' },
+      }),
+    });
+    if (!resp.ok) { console.error('[AI-PLAN] Groq lỗi:', resp.status); return null; }
+    const data = await resp.json();
+    const raw = data?.choices?.[0]?.message?.content;
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    const tips = Array.isArray(parsed.tips) ? parsed.tips.filter(t => typeof t === 'string' && t.trim()).slice(0, 6) : [];
+    if (!tips.length) return null;
+    console.log('[AI-PLAN] Đã sinh lộ trình AI cho môn', subject.name);
+    return { summary: (typeof parsed.summary === 'string' ? parsed.summary.trim() : ''), tips };
+  } catch (e) {
+    console.error('[AI-PLAN] Lỗi:', e.message);
+    return null;
+  }
+}
