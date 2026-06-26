@@ -9,7 +9,7 @@ import { renderResult } from './result.js';
 let session = { examId: null, questions: [], timerId: null, remaining: 0, submitted: false };
 
 export async function renderExam(root) {
-  cleanupExam(); // tắt đồng hồ cũ (nếu có) khi mở lại view
+  cleanupExam();
   root.innerHTML = loadingHTML('Đang tải môn học…');
   if (!state.subjects.length) {
     const d = await api.get('/content/subjects');
@@ -20,7 +20,7 @@ export async function renderExam(root) {
 
 // ---------- Bước 1: Cấu hình đề thi ----------
 function showConfig(root) {
-  cleanupExam(); // đảm bảo không còn đồng hồ chạy ngầm
+  cleanupExam();
   const preSel = state.currentSubject?.id;
   root.innerHTML = `
     <div class="card">
@@ -40,6 +40,12 @@ function showConfig(root) {
         </div>
       </div>
 
+      <div class="field">
+        <label>Hoặc nhập môn khác (AI tự sinh đề)</label>
+        <input type="text" id="e-custom" placeholder="VD: Quản trị học, Kế toán tài chính…" />
+        <span class="muted" style="font-size:.78rem">Để trống nếu dùng môn đã chọn. Nếu nhập, đề sẽ gồm câu trắc nghiệm do AI sinh.</span>
+      </div>
+
       <div class="row">
         <div class="field">
           <label>Mức độ khó tối đa</label>
@@ -50,10 +56,11 @@ function showConfig(root) {
             <option value="5">Rất khó (mọi mức độ)</option>
           </select>
         </div>
-       <div class="field">
+        <div class="field">
           <label>Số câu hỏi (1–20)</label>
           <input type="number" id="e-count" min="1" max="20" value="10" />
         </div>
+      </div>
 
       <div class="field">
         <label>Thời gian làm bài</label>
@@ -89,11 +96,17 @@ function showConfig(root) {
     if (!Number.isFinite(count) || count < 1) count = 1;
     if (count > 20) count = 20;
     const duration = Number(root.querySelector('#e-duration').value);
+    const customSubject = root.querySelector('#e-custom').value.trim();
 
-    root.innerHTML = loadingHTML('Đang biên soạn đề thi…');
+    root.innerHTML = loadingHTML(customSubject
+      ? `AI đang soạn đề cho môn "${esc(customSubject)}"…`
+      : 'Đang biên soạn đề thi…');
     try {
-      const d = await api.post('/exams/create', { subjectId, chapterId, difficulty, count, duration });
-      cleanupExam(); // tắt đồng hồ cũ trước khi bắt đầu phiên mới
+      const payload = customSubject
+        ? { customSubject, difficulty, count, duration }
+        : { subjectId, chapterId, difficulty, count, duration };
+      const d = await api.post('/exams/create', payload);
+      cleanupExam();
       session = {
         examId: d.examId,
         questions: d.questions,
@@ -141,7 +154,7 @@ function showExam(root) {
     timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     if (session.remaining <= 60) timerEl.classList.add('danger');
     if (session.remaining <= 0) {
-      cleanupExam();               // TẮT đồng hồ ngay, tránh bắn thông báo lặp
+      cleanupExam();
       if (!session.submitted) {
         toast('Hết giờ! Hệ thống tự động nộp bài.', '');
         doSubmit(root, true);
@@ -169,7 +182,7 @@ function showExam(root) {
 async function doSubmit(root, auto) {
   if (session.submitted) return;
   session.submitted = true;
-  cleanupExam(); // tắt đồng hồ ngay khi nộp
+  cleanupExam();
 
   const qRoot = root.querySelector('#e-questions');
   const answers = qRoot
