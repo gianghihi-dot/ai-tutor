@@ -7,6 +7,7 @@ import { dirname, join } from 'path';
 import { initSchema } from './src/db.js';
 import { seed } from './src/seed.js';
 import { seedExtra } from './src/seed-extra.js';
+import { seedSubjects } from './src/seed-subjects.js';
 import authRoutes from './src/routes/auth.js';
 import contentRoutes from './src/routes/content.js';
 import practiceRoutes from './src/routes/practice.js';
@@ -25,6 +26,8 @@ const seeded = seed();
 console.log(seeded ? '✓ Đã nạp dữ liệu mẫu.' : '• Dữ liệu đã sẵn sàng.');
 const extra = seedExtra();
 console.log(extra ? '✓ Đã bổ sung câu hỏi.' : '• Câu hỏi bổ sung đã có sẵn.');
+const newSubjects = seedSubjects();
+console.log(newSubjects ? `✓ Đã thêm ${newSubjects} môn học mới.` : '• Môn học đã đầy đủ.');
 
 app.use(express.json({ limit: '1mb' }));
 
