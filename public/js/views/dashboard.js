@@ -19,7 +19,45 @@ export async function renderDashboard(root, nav) {
       <button class="btn btn-primary" data-act="start">Bắt đầu học ngay ↗</button>
     </div>
 
-    <div class="grid grid-4">
+    <div class="card" id="about-card" style="margin-top:1.1rem">
+      <div class="section-head" style="margin:0 0 .8rem">
+        <h3>AI Tutor là gì?</h3>
+        <span class="muted">Nền tảng học tập thông minh cho sinh viên Kinh tế</span>
+      </div>
+      <p style="font-size:.92rem;line-height:1.65;margin-bottom:1rem">
+        AI Tutor là gia sư AI cá nhân hoá dành riêng cho sinh viên khối ngành Kinh tế.
+        Hệ thống tự sinh câu hỏi theo trình độ, chấm điểm tự động cả trắc nghiệm lẫn tự luận,
+        phát hiện chủ đề bạn còn yếu và xây lộ trình ôn tập thích ứng — độ khó tự điều chỉnh
+        theo kết quả thực tế của chính bạn, thay vì học theo một giáo trình cố định cho tất cả mọi người.
+      </p>
+
+      <div class="grid grid-3" style="margin-bottom:1rem">
+        <div class="about-step">
+          <span class="about-step-num">1</span>
+          <b>Khảo sát đầu vào</b>
+          <span class="muted" style="font-size:.8rem">Chọn môn học và mục tiêu điểm, làm bài khảo sát ngắn để hệ thống hiểu trình độ hiện tại của bạn.</span>
+        </div>
+        <div class="about-step">
+          <span class="about-step-num">2</span>
+          <b>Luyện tập thích ứng</b>
+          <span class="muted" style="font-size:.8rem">Làm bài, được chấm và giải thích chi tiết ngay lập tức — câu hỏi tiếp theo tự điều chỉnh độ khó theo năng lực.</span>
+        </div>
+        <div class="about-step">
+          <span class="about-step-num">3</span>
+          <b>Theo dõi tiến bộ</b>
+          <span class="muted" style="font-size:.8rem">Xem phân tích lỗ hổng kiến thức, lộ trình học 7 bước, và hỏi đáp trực tiếp với AI Chat Tutor bất cứ lúc nào.</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <span class="chip">✓ Chấm tự luận bằng AI</span>
+        <span class="chip">✓ Thi giả lập có đếm giờ</span>
+        <span class="chip">✓ Lộ trình học cá nhân hoá</span>
+        <span class="chip">✓ Nhận diện chủ đề yếu</span>
+      </div>
+    </div>
+
+    <div class="grid grid-4" style="margin-top:1.1rem">
       ${statCard('Điểm trung bình', s.avgScore ? `${s.avgScore}<small>/10</small>` : '—', '◈', 'c1')}
       ${statCard('Tỷ lệ đúng', `${s.accuracy}<small>%</small>`, '✓', 'c2')}
       ${statCard('Bài đã làm', s.attempts, '✎', 'c3')}
