@@ -27,18 +27,18 @@ export async function renderDashboard(root, nav) {
         🎓 AI Tutor là gia sư AI cá nhân hóa dành cho sinh viên khối ngành Kinh tế. Hệ thống sẽ giúp bạn đánh giá năng lực, tạo câu hỏi phù hợp với trình độ, chấm điểm tự động và phát hiện những chủ đề cần cải thiện. Từ đó, AI xây dựng lộ trình ôn tập thông minh, điều chỉnh độ khó theo kết quả học tập của chính bạn.
       </p>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1rem">
-        <div style="padding:.8rem;border-radius:.6rem;border:1px solid var(--border);display:flex;flex-direction:column;gap:.3rem">
-          <span style="width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent);color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center">1</span>
+        <div style="padding:.8rem;border-radius:.6rem;border:1.5px solid #f97316;background:rgba(249,115,22,.06);display:flex;flex-direction:column;gap:.3rem">
+          <span style="width:1.6rem;height:1.6rem;border-radius:50%;background:#f97316;color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center">1</span>
           <b style="font-size:.88rem">Khảo sát đầu vào</b>
           <span class="muted" style="font-size:.78rem">Chọn môn học và làm bài khảo sát ngắn để AI hiểu trình độ hiện tại của bạn.</span>
         </div>
-        <div style="padding:.8rem;border-radius:.6rem;border:1px solid var(--border);display:flex;flex-direction:column;gap:.3rem">
-          <span style="width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent);color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center">2</span>
+        <div style="padding:.8rem;border-radius:.6rem;border:1.5px solid #22c55e;background:rgba(34,197,94,.06);display:flex;flex-direction:column;gap:.3rem">
+          <span style="width:1.6rem;height:1.6rem;border-radius:50%;background:#22c55e;color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center">2</span>
           <b style="font-size:.88rem">Luyện tập thích ứng</b>
           <span class="muted" style="font-size:.78rem">Làm bài, được chấm và giải thích ngay — câu hỏi tiếp theo tự điều chỉnh độ khó theo năng lực.</span>
         </div>
-        <div style="padding:.8rem;border-radius:.6rem;border:1px solid var(--border);display:flex;flex-direction:column;gap:.3rem">
-          <span style="width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent);color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center">3</span>
+        <div style="padding:.8rem;border-radius:.6rem;border:1.5px solid #a855f7;background:rgba(168,85,247,.06);display:flex;flex-direction:column;gap:.3rem">
+          <span style="width:1.6rem;height:1.6rem;border-radius:50%;background:#a855f7;color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center">3</span>
           <b style="font-size:.88rem">Theo dõi tiến bộ</b>
           <span class="muted" style="font-size:.78rem">Xem phân tích lỗ hổng kiến thức và hỏi đáp trực tiếp với AI Chat Tutor bất cứ lúc nào.</span>
         </div>
