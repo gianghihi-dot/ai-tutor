@@ -25,7 +25,7 @@ function showConfig(root) {
   root.innerHTML = `
     <div class="card">
       <h3 class="card-title">Tạo đề thi giả lập</h3>
-      <p class="muted">Thiết lập đề thi theo cấu trúc chuẩn (trắc nghiệm + tự luận) với đồng hồ đếm ngược như phòng thi thật.</p>
+      <p class="muted">🔥 Đến lúc kiểm tra kiến thức rồi! Hãy thử sức với một bài thi mô phỏng để biết mình đang ở level nào. Yên tâm, điểm thấp thì chỉ có bạn và AI Tutor biết thôi 😎📚.</p>
 
       <div class="row" style="margin-top:1.2rem">
         <div class="field">
@@ -43,7 +43,7 @@ function showConfig(root) {
       <div class="field">
         <label>Hoặc nhập môn khác (AI tự sinh đề)</label>
         <input type="text" id="e-custom" placeholder="VD: Quản trị học, Kế toán tài chính…" />
-        <span class="muted" style="font-size:.78rem">Để trống nếu dùng môn đã chọn. Nếu nhập, đề sẽ gồm câu trắc nghiệm do AI sinh.</span>
+        <span class="muted" style="font-size:.78rem">Để trống nếu dùng môn đã chọn. Nếu nhập, đề sẽ gồm câu trắc nghiệm do AI sinh cho bạn nhé.</span>
       </div>
 
       <div class="row">
