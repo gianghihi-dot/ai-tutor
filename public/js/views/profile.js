@@ -9,18 +9,38 @@ import { renderResult } from './result.js';
 const GOALS = [['C', 'Đạt (C)'], ['B+', 'Khá (B+)'], ['A', 'Giỏi (A)'], ['improve', 'Thi cải thiện']];
 const MODE_LABEL = { survey: 'Khảo sát', practice: 'Luyện tập', exam: 'Thi giả lập' };
 
+// Màu riêng cho 4 ô thống kê
+const STAT_COLORS = [
+  { border: '#f97316', bg: 'rgba(249,115,22,.08)' },
+  { border: '#22c55e', bg: 'rgba(34,197,94,.08)'  },
+  { border: '#3b82f6', bg: 'rgba(59,130,246,.08)' },
+  { border: '#a855f7', bg: 'rgba(168,85,247,.08)' },
+];
+
 export async function renderProfile(root) {
   root.innerHTML = loadingHTML('Đang tải hồ sơ…');
   const [p, h] = await Promise.all([api.get('/profile'), api.get('/profile/history')]);
   const u = p.user, s = p.stats;
   let goal = u.goal || 'B+';
 
+  // Avatar gradient theo chữ cái đầu
+  const avatarLetter = (u.full_name || 'B')[0].toUpperCase();
+  const avatarGradients = [
+    'linear-gradient(135deg,#f97316,#ef4444)',
+    'linear-gradient(135deg,#8b5cf6,#ec4899)',
+    'linear-gradient(135deg,#06b6d4,#3b82f6)',
+    'linear-gradient(135deg,#22c55e,#16a34a)',
+  ];
+  const avatarGrad = avatarGradients[avatarLetter.charCodeAt(0) % avatarGradients.length];
+
   root.innerHTML = `
     <div class="grid grid-2">
-      <div class="card">
+      <div class="card" style="background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(236,72,153,.04));border:1px solid rgba(139,92,246,.25)">
         <div class="section-head" style="margin:0 0 1rem"><h3>Thông tin cá nhân</h3></div>
         <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem">
-          <div class="avatar" style="width:56px;height:56px;font-size:1.5rem">${esc((u.full_name || 'B')[0].toUpperCase())}</div>
+          <div class="avatar" style="width:56px;height:56px;font-size:1.5rem;background:${avatarGrad};color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 4px 14px rgba(139,92,246,.35)">
+            ${avatarLetter}
+          </div>
           <div>
             <b style="font-size:1.1rem;font-family:var(--font-display)">${esc(u.full_name)}</b>
             <div class="muted" style="font-size:.85rem">${esc(u.email)}</div>
@@ -41,13 +61,13 @@ export async function renderProfile(root) {
         <button class="btn btn-primary" id="pf-save">Lưu thay đổi</button>
       </div>
 
-      <div class="card">
+      <div class="card" style="background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(34,197,94,.04));border:1px solid rgba(59,130,246,.25)">
         <div class="section-head" style="margin:0 0 1rem"><h3>Thống kê học tập</h3></div>
         <div class="grid grid-2">
-          ${miniStat('Bài đã làm', s.attempts)}
-          ${miniStat('Điểm trung bình', s.avgScore ? `${s.avgScore}/10` : '—')}
-          ${miniStat('Tỷ lệ đúng', `${s.accuracy}%`)}
-          ${miniStat('Mục tiêu', GOALS.find(g => g[0] === goal)?.[1] || goal)}
+          ${miniStat('Bài đã làm',     s.attempts,                              0)}
+          ${miniStat('Điểm trung bình', s.avgScore ? `${s.avgScore}/10` : '—', 1)}
+          ${miniStat('Tỷ lệ đúng',     `${s.accuracy}%`,                       2)}
+          ${miniStat('Mục tiêu',        GOALS.find(g => g[0] === goal)?.[1] || goal, 3)}
         </div>
       </div>
     </div>
@@ -81,11 +101,10 @@ export async function renderProfile(root) {
     try {
       const d = await api.put('/profile', { fullName, goal });
       state.user = { ...state.user, full_name: d.user.full_name, goal: d.user.goal };
-      // Cập nhật tên hiển thị trên thanh trên cùng
       const nameEl = document.querySelector('#user-name');
-      const avEl = document.querySelector('#user-avatar');
+      const avEl   = document.querySelector('#user-avatar');
       if (nameEl) nameEl.textContent = d.user.full_name.split(' ').pop();
-      if (avEl) avEl.textContent = (d.user.full_name || 'B')[0].toUpperCase();
+      if (avEl)   avEl.textContent   = (d.user.full_name || 'B')[0].toUpperCase();
       toast('Đã lưu hồ sơ.', 'good');
     } catch (e) { toast(e.message, 'bad'); }
   };
@@ -97,7 +116,6 @@ export async function renderProfile(root) {
       const m = modal(loadingHTML('Đang tải bài làm…'));
       try {
         const r = await api.get(`/profile/result/${id}`);
-        // Chuẩn hoá về shape mà renderResult cần
         const view = {
           score: r.score, grade: letterGrade(r.score), correct: r.correct, total: r.total,
           detail: r.detail || [],
@@ -114,14 +132,14 @@ export async function renderProfile(root) {
   });
 }
 
-function miniStat(label, value) {
-  return `<div class="card stat" style="padding:1rem">
+function miniStat(label, value, colorIdx) {
+  const c = STAT_COLORS[colorIdx];
+  return `<div class="card stat" style="padding:1rem;border:1.5px solid ${c.border};background:${c.bg}">
     <span class="label">${label}</span>
     <span class="value" style="font-size:1.4rem">${value}</span>
   </div>`;
 }
 
-// Quy đổi điểm thang 10 sang xếp loại (đồng bộ với backend)
 function letterGrade(score) {
   if (score >= 9) return 'A+';
   if (score >= 8) return 'A';
