@@ -22,7 +22,7 @@ function showSetup(root) {
   root.innerHTML = `
     <div class="card">
       <h3 class="card-title">Khảo sát & luyện tập cá nhân hoá</h3>
-      <p class="muted">Chọn môn, chương và mục tiêu điểm. Hệ thống sẽ sinh bộ câu hỏi phù hợp với trình độ của bạn.</p>
+      <p class="muted">🎯 Hãy chọn mục tiêu của bạn, AI Tutor sẽ tạo bộ câu hỏi phù hợp để giúp bạn học hiệu quả hơn. Cứ làm thử đi, biết đâu bạn giỏi hơn mình nghĩ đấy! 😄.</p>
 
       <div class="row" style="margin-top:1.2rem">
         <div class="field">
@@ -40,7 +40,7 @@ function showSetup(root) {
       <div class="field">
         <label>Hoặc nhập môn khác (AI tự sinh câu hỏi)</label>
         <input type="text" id="p-custom" placeholder="VD: Quản trị học, Kế toán tài chính…" />
-        <span class="muted" style="font-size:.78rem">Để trống nếu dùng môn đã chọn ở trên. Nếu nhập, AI sẽ sinh câu hỏi cho môn này.</span>
+        <span class="muted" style="font-size:.78rem">Để trống nếu dùng môn đã chọn ở trên. Nếu nhập, AI sẽ sinh câu hỏi cho môn này giúp bạn nho!✨.</span>
       </div>
 
       <div class="field">
