@@ -24,10 +24,7 @@ export async function renderDashboard(root, nav) {
         <span class="muted" style="font-size:.82rem">Nền tảng học tập thông minh cho sinh viên Kinh tế</span>
       </div>
       <p style="font-size:.92rem;line-height:1.65;margin-bottom:1rem;color:var(--muted)">
-        AI Tutor là gia sư AI cá nhân hoá dành riêng cho sinh viên khối ngành Kinh tế.
-        Hệ thống tự sinh câu hỏi theo trình độ, chấm điểm tự động cả trắc nghiệm lẫn tự luận,
-        phát hiện chủ đề bạn còn yếu và xây lộ trình ôn tập thích ứng —
-        độ khó tự điều chỉnh theo kết quả thực tế của chính bạn.
+        🎓 AI Tutor là gia sư AI cá nhân hóa dành cho sinh viên khối ngành Kinh tế. Hệ thống sẽ giúp bạn đánh giá năng lực, tạo câu hỏi phù hợp với trình độ, chấm điểm tự động và phát hiện những chủ đề cần cải thiện. Từ đó, AI xây dựng lộ trình ôn tập thông minh, điều chỉnh độ khó theo kết quả học tập của chính bạn.
       </p>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1rem">
         <div style="padding:.8rem;border-radius:.6rem;border:1px solid var(--border);display:flex;flex-direction:column;gap:.3rem">
