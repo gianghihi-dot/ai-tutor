@@ -454,3 +454,31 @@ textarea.q-input { min-height: 120px; resize: vertical; }
 .nav-item[data-view="chat"]      .ic { color: #ff5c8a !important; }
 .nav-item[data-view="profile"]   .ic { color: #25d6c4 !important; }
 .nav-item .ic { opacity: 1 !important; }
+/* ── Khối giới thiệu app ── */
+#about-card {
+  margin-top: 1.1rem;
+}
+
+.about-step {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  padding: .8rem;
+  border-radius: .6rem;
+  background: var(--surface, rgba(255,255,255,.04));
+  border: 1px solid var(--border);
+}
+
+.about-step-num {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: .2rem;
+}
