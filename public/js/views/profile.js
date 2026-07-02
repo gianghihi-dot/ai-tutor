@@ -31,7 +31,7 @@ export async function renderProfile(root) {
     'linear-gradient(135deg,#06b6d4,#3b82f6)',
     'linear-gradient(135deg,#22c55e,#16a34a)',
   ];
-  const avatarGrad = 'linear-gradient(135deg,#f472b6,#ec4899)';
+  const avatarGrad = 'linear-gradient(135deg,#a855f7,#ec4899)';
 
   root.innerHTML = `
     <div class="grid grid-2">
