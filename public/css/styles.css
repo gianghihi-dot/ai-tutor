@@ -482,3 +482,16 @@ textarea.q-input { min-height: 120px; resize: vertical; }
   justify-content: center;
   margin-bottom: .2rem;
 }
+/* ── Màu bubble chat ── */
+.msg.bot {
+  background: linear-gradient(135deg, rgba(236,72,153,.15), rgba(168,85,247,.12));
+  border: 1px solid rgba(236,72,153,.3);
+  color: var(--text);
+}
+
+.msg.user {
+  background: linear-gradient(135deg, rgba(168,85,247,.2), rgba(236,72,153,.15));
+  border: 1px solid rgba(168,85,247,.35);
+  color: var(--text);
+  align-self: flex-end;
+}
