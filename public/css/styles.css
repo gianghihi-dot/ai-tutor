@@ -495,3 +495,15 @@ textarea.q-input { min-height: 120px; resize: vertical; }
   color: var(--text);
   align-self: flex-end;
 }
+/* ── Ô nhập chat ── */
+.chat-input input {
+  background: rgba(168,85,247,.08);
+  border: 1.5px solid rgba(168,85,247,.25);
+  color: var(--text);
+}
+
+.chat-input input:focus {
+  border-color: rgba(168,85,247,.55);
+  outline: none;
+  background: rgba(168,85,247,.11);
+}
