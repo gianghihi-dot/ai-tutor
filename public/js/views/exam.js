@@ -18,12 +18,11 @@ export async function renderExam(root) {
   showConfig(root);
 }
 
-// ---------- Bước 1: Cấu hình đề thi ----------
 function showConfig(root) {
   cleanupExam();
   const preSel = state.currentSubject?.id;
   root.innerHTML = `
-    <div class="card">
+    <div class="card" style="background:linear-gradient(135deg,rgba(249,115,22,.10),rgba(239,68,68,.06));border:1.5px solid rgba(249,115,22,.35)">
       <h3 class="card-title">Tạo đề thi giả lập</h3>
       <p class="muted">🔥 Đến lúc kiểm tra kiến thức rồi! Hãy thử sức với một bài thi mô phỏng để biết mình đang ở level nào. Yên tâm, điểm thấp thì chỉ có bạn và AI Tutor biết thôi 😎📚.</p>
 
@@ -124,7 +123,6 @@ function showConfig(root) {
   };
 }
 
-// ---------- Bước 2: Làm bài thi (có đếm giờ) ----------
 function showExam(root) {
   const { questions, title } = session;
   root.innerHTML = `
@@ -178,7 +176,6 @@ function showExam(root) {
   root.querySelector('#e-submit2').onclick = submit;
 }
 
-// ---------- Bước 3: Nộp & chấm điểm ----------
 async function doSubmit(root, auto) {
   if (session.submitted) return;
   session.submitted = true;
@@ -203,7 +200,6 @@ async function doSubmit(root, auto) {
   }
 }
 
-// Dọn dẹp đồng hồ khi rời view
 export function cleanupExam() {
   if (session.timerId) clearInterval(session.timerId);
   session.timerId = null;
