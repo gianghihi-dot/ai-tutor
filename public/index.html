@@ -8,6 +8,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/styles.css" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#a855f7" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="AI Tutor" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
 </head>
 <body>
   <!-- ============ MÀN HÌNH XÁC THỰC ============ -->
@@ -80,7 +89,6 @@
 
   <!-- ============ KHUNG ỨNG DỤNG ============ -->
   <div id="app-shell" class="app-shell hidden">
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
         <div class="logo-mark sm">∑</div>
@@ -98,7 +106,6 @@
       </div>
     </aside>
 
-    <!-- Main -->
     <div class="main">
       <header class="topbar">
         <button class="icon-btn" id="menu-toggle" aria-label="Menu">☰</button>
@@ -112,14 +119,22 @@
           <button class="btn btn-ghost" id="logout-btn">Đăng xuất</button>
         </div>
       </header>
-      <main class="content" id="app-content"><!-- view render here --></main>
+      <main class="content" id="app-content"></main>
     </div>
   </div>
 
-  <!-- Toast & overlay -->
   <div id="toast-wrap" class="toast-wrap"></div>
   <div id="overlay" class="overlay hidden"></div>
 
-<script type="module" src="/js/main.js"></script>
+  <script type="module" src="/js/main.js"></script>
+
+  <!-- Đăng ký Service Worker cho PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>
