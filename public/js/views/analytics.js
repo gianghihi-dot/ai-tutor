@@ -14,7 +14,7 @@ export async function renderAnalytics(root) {
 
   const sid = state.currentSubject?.id || state.subjects[0]?.id;
   root.innerHTML = `
-    <div class="card">
+    <div class="card" style="background:linear-gradient(135deg,rgba(59,130,246,.10),rgba(34,197,94,.06));border:1.5px solid rgba(59,130,246,.35)">
       <div class="section-head" style="margin:0">
         <h3>Phân tích lỗ hổng kiến thức</h3>
         <div class="field" style="margin:0;min-width:240px">
@@ -42,14 +42,13 @@ async function loadSubject(body, subjectId) {
       api.get(`/analytics/plan/${subjectId}`),
     ]);
     render(body, gaps, plan);
-    loadAIPlan(body, subjectId); // gọi AI riêng, bồi vào sau (không chặn trang)
+    loadAIPlan(body, subjectId);
   } catch (e) {
     toast(e.message, 'bad');
     body.innerHTML = `<div class="card empty"><p class="muted">Không tải được dữ liệu phân tích.</p></div>`;
   }
 }
 
-// Gọi lộ trình AI và chèn vào khu vực dành sẵn
 async function loadAIPlan(body, subjectId) {
   const slot = body.querySelector('#ai-plan-slot');
   if (!slot) return;
@@ -62,10 +61,10 @@ async function loadAIPlan(body, subjectId) {
     if (aiPlan && aiPlan.tips?.length) {
       slot.innerHTML = aiPlanCard(aiPlan);
     } else {
-      slot.innerHTML = ''; // không có AI → ẩn hẳn
+      slot.innerHTML = '';
     }
   } catch (e) {
-    slot.innerHTML = ''; // lỗi → ẩn, vẫn còn lộ trình chuẩn ở trên
+    slot.innerHTML = '';
   }
 }
 
@@ -94,18 +93,18 @@ function render(body, gaps, plan) {
 
   body.innerHTML = `
     <div class="grid grid-2" style="margin-top:1.1rem">
-      <div class="card">
+      <div class="card" style="border:1.5px solid rgba(34,197,94,.3);background:rgba(34,197,94,.05)">
         <div class="section-head" style="margin:0 0 .8rem"><h3>Mức độ thành thạo theo chương</h3></div>
         ${bars.length ? barChart(bars) : '<p class="muted">Chưa có chương nào được luyện.</p>'}
       </div>
-      <div class="card">
+      <div class="card" style="border:1.5px solid rgba(239,68,68,.3);background:rgba(239,68,68,.05)">
         <div class="section-head" style="margin:0 0 .8rem"><h3>Chủ đề còn yếu</h3></div>
         ${gaps.weak.length ? gaps.weak.map(w => topicRow(w, 'bad')).join('') :
           '<p class="muted" style="padding:.6rem 0">Không có chủ đề yếu rõ rệt. Làm tốt lắm!</p>'}
       </div>
     </div>
 
-    <div class="card" style="margin-top:1.1rem">
+    <div class="card" style="margin-top:1.1rem;border:1.5px solid rgba(168,85,247,.3);background:rgba(168,85,247,.05)">
       <div class="section-head" style="margin:0 0 .8rem"><h3>Điểm mạnh</h3></div>
       ${gaps.strong.length ? gaps.strong.map(w => topicRow(w, 'good')).join('') :
         '<p class="muted" style="padding:.6rem 0">Tiếp tục luyện tập để xây dựng thế mạnh nhé.</p>'}
@@ -132,7 +131,7 @@ function adaptiveCard(gaps) {
   const reduce = gaps.weak.filter(w => w.streak_wrong >= 2);
   const advance = gaps.strong;
   if (!reduce.length && !advance.length) return '';
-  return `<div class="card" style="margin-top:1.1rem">
+  return `<div class="card" style="margin-top:1.1rem;border:1.5px solid rgba(249,115,22,.3);background:rgba(249,115,22,.05)">
     <div class="section-head" style="margin:0 0 .6rem"><h3>Điều chỉnh thích ứng</h3></div>
     ${reduce.length ? `<p style="margin:.3rem 0"><span class="chip bad">Giảm độ khó</span>
       Với ${esc(reduce.map(w => w.topic).join(', '))}, hệ thống sẽ hạ độ khó, kèm giải thích chi tiết và bài tập bổ trợ.</p>` : ''}
@@ -142,7 +141,7 @@ function adaptiveCard(gaps) {
 }
 
 function planCard(plan) {
-  return `<div class="card" style="margin-top:1.1rem">
+  return `<div class="card" style="margin-top:1.1rem;border:1.5px solid rgba(59,130,246,.3);background:rgba(59,130,246,.05)">
     <div class="section-head" style="margin:0 0 .4rem">
       <h3>Lộ trình học thích ứng</h3>
       <span class="chip ${plan.progress >= 70 ? 'good' : plan.progress >= 40 ? 'warn' : ''}">${plan.progress}% hoàn thành</span>
@@ -161,9 +160,8 @@ function planCard(plan) {
   </div>`;
 }
 
-// Thẻ lộ trình gợi ý từ AI
 function aiPlanCard(ai) {
-  return `<div class="card" style="margin-top:1.1rem;border:1px solid var(--accent)">
+  return `<div class="card" style="margin-top:1.1rem;border:1.5px solid var(--accent);background:rgba(168,85,247,.06)">
     <div class="section-head" style="margin:0 0 .4rem"><h3>✨ Gợi ý từ AI cho riêng bạn</h3></div>
     ${ai.summary ? `<p style="margin:.2rem 0 .8rem;font-weight:600;color:var(--accent)">${esc(ai.summary)}</p>` : ''}
     <div class="steps">
