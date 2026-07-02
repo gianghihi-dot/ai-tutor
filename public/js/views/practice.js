@@ -20,7 +20,7 @@ export async function renderPractice(root) {
 function showSetup(root) {
   const preSel = state.currentSubject?.id;
   root.innerHTML = `
-    <div class="card">
+    <div class="card" style="background:linear-gradient(135deg,rgba(236,72,153,.10),rgba(168,85,247,.08));border:1.5px solid rgba(236,72,153,.35)">
       <h3 class="card-title">Khảo sát & luyện tập cá nhân hoá</h3>
       <p class="muted">🎯 Hãy chọn mục tiêu của bạn, AI Tutor sẽ tạo bộ câu hỏi phù hợp để giúp bạn học hiệu quả hơn. Cứ làm thử đi, biết đâu bạn giỏi hơn mình nghĩ đấy! 😄.</p>
 
